@@ -29,5 +29,34 @@ process = process.replace("href=", "")
 
 process = process.split(" ")
 
-process = [x for x in process if "https://altjerseys.com/team/" in x]
+process = set([x for x in process if "https://altjerseys.com/team/" in x])
+
+# print(process)
+
+#GETTING THE TEAM DATA
+
+link = "https://altjerseys.com/team/flyers/"
+
+data = requests.get(link)
+
+html = BeautifulSoup(data.text, 'html.parser')
+
+raw = html.find(attrs={'class':'content-full'})
+
+# print(raw)
+
+enter = str(raw)
+
+enter = enter.replace("</a></li>", "")
+enter = enter.replace("<li class=\"product-category product\">", "")
+enter = enter.replace("><img", "")
+enter = enter.replace("\'", "")
+enter = enter.replace("\"", "")
+enter = enter.replace("href=", "")
+
+enter = enter.split(" ")
+
+enter = set([x for x in enter if "https://altjerseys.com/product/" in x])
+
+print(enter)
 

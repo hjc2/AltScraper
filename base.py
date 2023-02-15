@@ -17,6 +17,7 @@ html = BeautifulSoup(data.text, 'html.parser')
 
 raw = html.find('div', attrs={'class':'content-full'})
 
+#CLEANING HOMEPAGE AND GETTING TEAM LINK DATA
 process = str(raw)
 
 process = process.replace("</a></li>", "")
@@ -28,16 +29,5 @@ process = process.replace("href=", "")
 
 process = process.split(" ")
 
-# process = [x for x in process if "team" in x]
 process = [x for x in process if "https://altjerseys.com/team/" in x]
 
-print(process)
-
-print(len(process))
-
-# print(articles)
-#
-
-# <a href="https://altjerseys.com/team/zoodisc/">
-
-# process = [x for x in process if x.startswith("https://altjerseys.com/team/")]

@@ -1,5 +1,6 @@
 
 import requests
+import sys
 from bs4 import BeautifulSoup
 
 
@@ -50,7 +51,16 @@ def itemPage(link):
     
     return(not "Out of stock" in str(html.find('div', attrs={'class':'summary'})))
 
+if("-h" in sys.argv or "--help" in sys.argv):
+    print("-h : prints a help message \n--help : prints a help message \n-v : verbose output \n--verbose : verbose output")
 
-for x in homePage(homeURL):
-    for y in teamStore(x):
-        print(str(itemPage(y)) + ": " + y)
+elif("-v" in sys.argv or "--verbose" in sys.argv):
+    for x in homePage(homeURL):
+        for y in teamStore(x):
+            print(str(itemPage(y)) + ": " + y)
+else:
+    for x in homePage(homeURL):
+        for y in teamStore(x):
+            res = itemPage(y)
+            if(res):
+                print(str(res) + ": " + y)

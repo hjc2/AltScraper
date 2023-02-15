@@ -35,28 +35,34 @@ process = set([x for x in process if "https://altjerseys.com/team/" in x])
 
 #GETTING THE TEAM DATA
 
-link = "https://altjerseys.com/team/flyers/"
+v = "https://altjerseys.com/team/flyers/"
 
-data = requests.get(link)
+def teamStore(link):
+    data = requests.get(link)
+    html = BeautifulSoup(data.text, 'html.parser')
+    raw = html.find(attrs={'class':'content-full'})
 
-html = BeautifulSoup(data.text, 'html.parser')
+    enter = str(raw)
 
-raw = html.find(attrs={'class':'content-full'})
+    enter = enter.replace("</a></li>", "")
+    enter = enter.replace("<li class=\"product-category product\">", "")
+    enter = enter.replace("><img", "")
+    enter = enter.replace("\'", "")
+    enter = enter.replace("\"", "")
+    enter = enter.replace("href=", "")
 
-# print(raw)
+    enter = enter.split(" ")
 
-enter = str(raw)
+    return set([x for x in enter if "https://altjerseys.com/product/" in x])
 
-enter = enter.replace("</a></li>", "")
-enter = enter.replace("<li class=\"product-category product\">", "")
-enter = enter.replace("><img", "")
-enter = enter.replace("\'", "")
-enter = enter.replace("\"", "")
-enter = enter.replace("href=", "")
+def itemPage(link):
+    data = requests.get(link)
 
-enter = enter.split(" ")
+    html = BeautifulSoup(data.text, 'html.parser')
 
-enter = set([x for x in enter if "https://altjerseys.com/product/" in x])
+    return(not "Out of stock" in str(html.find('div', attrs={'class':'summary'})))
 
-print(enter)
 
+z = teamStore(v)
+for x in z:
+    print(itemPage(x))

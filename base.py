@@ -6,7 +6,11 @@ from bs4 import BeautifulSoup
 
 homeURL = "https://altjerseys.com/shop/"
 
+cnt = 0
+
 def homePage(link):
+    global cnt
+    cnt += 1
     data = requests.get(link)
     html = BeautifulSoup(data.text, 'html.parser')
     raw = html.find('div', attrs={'class':'content-full'})
@@ -26,6 +30,9 @@ def homePage(link):
     return set([x for x in process if "https://altjerseys.com/team/" in x])
 
 def teamStore(link):
+    global cnt
+
+    cnt += 1
     data = requests.get(link)
     html = BeautifulSoup(data.text, 'html.parser')
     raw = html.find(attrs={'class':'content-full'})
@@ -45,6 +52,9 @@ def teamStore(link):
 
 
 def itemPage(link):
+    global cnt
+
+    cnt += 1
     data = requests.get(link)
 
     html = BeautifulSoup(data.text, 'html.parser')
@@ -56,6 +66,7 @@ if("-h" in sys.argv or "--help" in sys.argv):
 
 elif("-v" in sys.argv or "--verbose" in sys.argv):
     for x in homePage(homeURL):
+        print(cnt)
         for y in teamStore(x):
             print(str(itemPage(y)) + ": " + y)
 else:
@@ -64,3 +75,6 @@ else:
             res = itemPage(y)
             if(res):
                 print(str(res) + ": " + y)
+
+print("----")
+print(cnt)

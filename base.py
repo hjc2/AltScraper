@@ -41,13 +41,14 @@ def teamStore(link):
 
     enter = enter.split(" ")
 
-    return set([x for x in enter if "https://altjerseys.com/product/" in x])
+    return(set([x for x in enter if "https://altjerseys.com/product/" in x and "sun-hoodie" in x]))
+
 
 def itemPage(link):
     data = requests.get(link)
 
     html = BeautifulSoup(data.text, 'html.parser')
-
+    
     return(not "Out of stock" in str(html.find('div', attrs={'class':'summary'})))
 
 

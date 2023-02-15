@@ -4,38 +4,26 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 
 
-url = "https://altjerseys.com/shop/"
-# url = "https://cs.trinity.edu/~hcolema1/"
+homeURL = "https://altjerseys.com/shop/"
 
-data = requests.get(url)
+def homePage(link):
+    data = requests.get(link)
+    html = BeautifulSoup(data.text, 'html.parser')
+    raw = html.find('div', attrs={'class':'content-full'})
 
-# print(data.headers)
+    #CLEANING HOMEPAGE AND GETTING TEAM LINK DATA
+    process = str(raw)
 
-# print(data.text)
+    process = process.replace("</a></li>", "")
+    process = process.replace("<li class=\"product-category product\">", "")
+    process = process.replace("><img", "")
+    process = process.replace("\'", "")
+    process = process.replace("\"", "")
+    process = process.replace("href=", "")
 
-html = BeautifulSoup(data.text, 'html.parser')
+    process = process.split(" ")
 
-raw = html.find('div', attrs={'class':'content-full'})
-
-#CLEANING HOMEPAGE AND GETTING TEAM LINK DATA
-process = str(raw)
-
-process = process.replace("</a></li>", "")
-process = process.replace("<li class=\"product-category product\">", "")
-process = process.replace("><img", "")
-process = process.replace("\'", "")
-process = process.replace("\"", "")
-process = process.replace("href=", "")
-
-process = process.split(" ")
-
-process = set([x for x in process if "https://altjerseys.com/team/" in x])
-
-# print(process)
-
-#GETTING THE TEAM DATA
-
-v = "https://altjerseys.com/team/flyers/"
+    return set([x for x in process if "https://altjerseys.com/team/" in x])
 
 def teamStore(link):
     data = requests.get(link)
@@ -63,6 +51,6 @@ def itemPage(link):
     return(not "Out of stock" in str(html.find('div', attrs={'class':'summary'})))
 
 
-z = teamStore(v)
-for x in z:
-    print(itemPage(x))
+for x in homePage(homeURL):
+    for y in teamStore(x):
+        print(str(itemPage(y)) + ": " + y)
